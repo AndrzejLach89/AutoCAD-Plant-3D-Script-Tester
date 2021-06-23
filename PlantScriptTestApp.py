@@ -12,6 +12,8 @@ class ScriptReader:
     def __init__(self, path):
         self.path = path
         self.script = self.readScript()
+        self.prepareScript()
+        self.executeScript()
     
     def readScript(self):
         try:
@@ -30,33 +32,37 @@ class ScriptReader:
         
     def executeScript(self):
         exec(self.script)
-        
-class UI:
+    
+    
+class App:
     def __init__(self, root):
         self.root = root
+        self.root.title("PlantScriptTest App")
         self.path = tk.StringVar()
-        self.pathFrame = tk.Frame(self.root)
+        self.mainFrame = tk.Frame(self.root, bg="black")
+        self.mainFrame.pack()
+        self.pathFrame = tk.Frame(self.mainFrame, bg="black")
         self.pathFrame.pack()
-        self.pathLabel = tk.Label(self.pathFrame, textvariable=self.path)
+        self.pathLabel = tk.Label(self.pathFrame, textvariable=self.path, width=100, fg="green2", bg="black")
         self.pathLabel.pack(side='left', fill='x')
-        self.pathButton = tk.Button(self.pathFrame, text="Browse", command=self.getPath)
+        self.pathButton = tk.Button(self.pathFrame, text="Browse", command=self.getPath, bg="green", fg="white")
         self.pathButton.pack(side="right")
-        self.runButton = tk.Button(self.root, text="Run test", command=self.runTest)
-        self.runButton.pack()
+        self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
+        self.runButton.pack(fill='x')
         self.root.mainloop()
+    
     def getPath(self):
         path = tkf.askopenfile()
-        print(path.name)
         if path == "" or path == " ":
             return
         else:
             self.path.set(path.name)
+        self.runButton.config(state="normal")
+    
     def runTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
             return
         test = ScriptReader(self.path.get())
-        test.prepareScript()
-        test.executeScript()
         
 root = tk.Tk()
-app = UI(root)
+app = App(root)
