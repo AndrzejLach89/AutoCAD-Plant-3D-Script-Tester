@@ -9,6 +9,7 @@ This script covers all (as far as I know) the primitives and their methods.
 ##Manual  
 Comment all the imports and parameter section in your script file, then import * from this file to your script and invoke script function    
 at the end of the script to check for errors. If no problems were found, continue with checking your script in Plant 3D.  
+Script checks parameters type, if type errors are found, they are logged the console and to "scriptLog.txt" file.  
 
 ##License  
 This script is released under MIT License.  
