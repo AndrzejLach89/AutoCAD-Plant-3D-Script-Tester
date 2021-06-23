@@ -112,109 +112,100 @@ class PLANTOBJECT:
         
     def setPoint(self, position, direction):
         ArgCheck.check(self.ID, (position, direction), ("num", "num"))
-        print("  >{}: Adding point at {}, direction: {}".format(self.ID, position, direction))
+        #print("  >{}: Adding point at {}, direction: {}".format(self.ID, position, direction))
+        print("{}:\n\tAdding point at {}, direction: {}".format(self.ID, position, direction))
         return self
         
     def numberOfPoints(self, *args):
-        print("  >{}: Obtaining number of points...".format(self.ID))
+        print("{}:\n\tObtaining number of points...".format(self.ID))
         return self
         
     def directionAt(self, *args):
-        print("  >{}: Obtaining direction...".format(self.ID))
+        print("{}:\n\tObtaining direction...".format(self.ID))
         return self
         
     def pointAt(self, *args):
-        print("  >{}: Obtaining position of connection point...".format(self.ID))
+        print("{}:\n\tObtaining position of connection point...".format(self.ID))
         return self
         
     def setLinearDimension(name, vector1, vector2):
         ArgCheck.check(self.ID, (name, vector1, vector2), (str, "num", "num"))
-        print(">>" +self.ID +": Adding linear dimension: ", *args)
-        print(">>{}: Adding linear dimension at {}, {}".format(self.ID, vector1, vector2))
+        print("{}:\n\tAdding linear dimension at {}, {}".format(self.ID, vector1, vector2))
         return self
         
         
 class PRIMITIVE:
     def translate(self, x):
         ArgCheck.check(self.ID, x, "num")
-        print("  >" + self.ID + " translation: ", x[0], x[1], x[2])
+        print("{}:\n\ttranslation: {}".format(self.ID, x))
         return self
         
     def rotateX(self, x):
         ArgCheck.check(self.ID, x, "num")
-        print("  >" + self.ID + " rotation by X:", x)
+        print("{}:\n\tRotation by X: {} deg".format(self.ID, x))
         return self
         
     def rotateY(self, x):
         ArgCheck.check(self.ID, x, "num")
-        print("  >" + self.ID + " rotation by Y:", x)
+        print("{}:\n\tRotation by Y: {} deg".format(self.ID, x))
         return self
         
     def rotateZ(self, x):
         ArgCheck.check(self.ID, x, "num")
-        print("  >" + self.ID + " rotation by Z:", x)
+        print("{}:\n\tRotation by Z: {} deg".format(self.ID, x))
         return self
         
     def erase(self):
-        print("  >" + self.ID + " was erased")
+        print("{}:\n\tObject was erased.".format(self.ID))
         return self
         
     def uniteWith(self, object):
         ArgCheck.check(self.ID, object, PRIMITIVE)
-        newObject = MODIFIED_OBJECT()
-        print("  >" + self.ID + " was united with " + object.ID)
-        print("  >" + newObject.ID + " was created")
+        print("{}:\n\tUniting {} with {}\n\tCreating new object.".format(self.ID, self.ID, object.ID))
+        newObject = MODIFIED_OBJECT(self.ID, object.ID)
+        self.ID = newObject.ID
         return newObject
         
     def subtractFrom(self, object):
         ArgCheck.check(self.ID, object, PRIMITIVE)
-        newObject = MODIFIED_OBJECT()
-        print("  >" + object.ID + " was subtracted from " + self.ID)
-        print("  >" + newObject.ID + " was created")
+        print("{}:\n\tSubtracting {} from {}\n\tCreating new object.".format(self.ID, object.ID, self.ID))
+        newObject = MODIFIED_OBJECT(self.ID, object.ID)
+        self.ID = newObject.ID
         return newObject
         
     def intersectWith(self, object):
         ArgCheck.check(self.ID, object, PRIMITIVE)
-        newObject = MODIFIED_OBJECT()
-        print("  >" + object.ID + " intersecting with " + self.ID)
-        print("  >" + newObject.ID + " was created")
+        print("{}:\n\tCreating new object at intersection of {} and {}".format(self.ID, self.ID, object.ID))
+        newObject = MODIFIED_OBJECT(self.ID, object.ID)
+        self.ID = newObject.ID
         return newObject
         
     def parameters(self):
-        print("  >Obtaining " + self.ID + "parameters...")
+        print("{}:\n\tGetting {} parameters".format(self.ID, self.ID))
         return self
         
     def transformationMatrix(self):
-        print("  >Obtaining " + self.ID + "transformation matrix...")
+        print("{}:\n\tGetting {} transformation matrix".format(self.ID, self.ID))
         return self
         
-    #def numberOfPoints(self, *args):
-    #    print("  >Obtaining " + self.ID + "number of points...")
-    #    return self
-
-    #def directionAt(self, *args):
-    #    print("  >Obtaining " + self.ID + "direction at connection point...")
-    #    return self
-        
-    #def pointAt(self, *args):
-    #    print("  >Obtaining " + self.ID + "position of connection point...")
-    #    return self
-        
-    #def setPoint(self, *args):
-    #    print("  >Appending connection point to " + self.ID + "...")
-    #    return self
-        
     def setTransformationMatrix(self, *args):
-        print("  >Setting " + self.ID + "transformation matrix...")
+        print("{}:\n\tSetting {} transformation matrix\n\t{}".format(self.ID, self.ID, *args))
         return self
 
 
 class MODIFIED_OBJECT(PRIMITIVE):
     name = "MODIFIED_OBJECT"
     ID = 0
-    def __init__(self, *args):
+    def __init__(self, parent1, parent2, *args):
         self.ID = "{} {}".format(MODIFIED_OBJECT.name, MODIFIED_OBJECT.ID)
+        self.parent1 = parent1
+        self.parent2 = parent2
         MODIFIED_OBJECT.ID += 1
+        self.describe()
+        
+    def describe(self):
+        print("Creating {}:".format(self.ID))
+        print("\tObject created using {} and {}".format(self.parent1, self.parent2))
         
         
 class CYLINDER(PRIMITIVE):
@@ -231,13 +222,12 @@ class CYLINDER(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius: " + str(self.R))
-        print("\t" + "Height: " + str(self.H))
-        print("\t" + "Inner r:" + str(self.O))
+        print("Creating {}:".format(self.ID))
+        print("\tRadius:  {}".format(self.R))
+        print("\tHeight:  {}".format(self.H))
+        print("\tInner r: {}".format(self.O))
         if self.R <= self.O:
-            print("------->ERROR:")
-            print("R <= O")
+            print("\tWarning! R <= 0")
    
    
 class TORUS(PRIMITIVE):
@@ -253,12 +243,11 @@ class TORUS(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Main radius: " + str(self.R1))
-        print("\t" + "Sec radius:  " + str(self.R2))
+        print("Creating {}:".format(self.ID))
+        print("\tMain radius: {}".format(self.R1))
+        print("\tSec radius:  {}".format(self.R2))
         if self.R1 <= self.R2:
-            print("------->ERROR:")
-            print("R1 <= R2")
+            print("\t Warning! R1 < R2")
        
        
 class ARC3D(PRIMITIVE):
@@ -275,10 +264,10 @@ class ARC3D(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Pipe radius:  " + str(self.D))
-        print("\t" + "Bend radius:  " + str(self.R))
-        print("\t" + "Bend angle :  " + str(self.A))
+        print("Creating {}:".format(self.ID))
+        print("\tPipe radius:  {}".format(self.D))
+        print("\tBend radius:  {}".format(self.R))
+        print("\tBend angle :  {}".format(self.A))
         
             
 class ARC3D2(PRIMITIVE):
@@ -296,11 +285,11 @@ class ARC3D2(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Pipe radius  :  " + str(self.D))
-        print("\t" + "Pipe radius 2:  " + str(self.D2))
-        print("\t" + "Bend radius  :  " + str(self.R))
-        print("\t" + "Bend angle   :  " + str(self.A))
+        print("Creating {}:".format(self.ID))
+        print("\tPipe radius  :  {}".format(self.D))
+        print("\tPipe radius 2:  {}".format(self.D2))
+        print("\tBend radius  :  {}".format(self.R))
+        print("\tBend angle   :  {}".format(self.A))
             
 
 class ARC3DS(PRIMITIVE):
@@ -318,11 +307,11 @@ class ARC3DS(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Pipe radius:  " + str(self.D))
-        print("\t" + "Bend radius:  " + str(self.R))
-        print("\t" + "Bend angle :  " + str(self.A))
-        print("\t" + "Segments   :  " + str(self.S))
+        print("Creating {}:".format(self.ID))
+        print("\tPipe radius:  {}".format(self.D))
+        print("\tBend radius:  {}".format(self.R))
+        print("\tBend angle :  {}".format(self.A))
+        print("\tSegments   :  {}".format(self.S))
         
         
 class BOX(PRIMITIVE):
@@ -339,10 +328,10 @@ class BOX(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Y width    :  " + str(self.L))
-        print("\t" + "Z height   :  " + str(self.W))
-        print("\t" + "X length   :  " + str(self.H))
+        print("Creating {}:".format(self.ID))
+        print("\tY width    :  {}".format(self.L))
+        print("\tZ height   :  {}".format(self.W))
+        print("\tX length   :  {}".format(self.H))
         
         
 class CONE(PRIMITIVE):
@@ -360,11 +349,11 @@ class CONE(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Bottom radius :  " + str(self.R1))
-        print("\t" + "Upper radius  :  " + str(self.R2))
-        print("\t" + "Heitht        :  " + str(self.H))
-        print("\t" + "Eccentricity  :  " + str(self.E))
+        print("Creating {}:".format(self.ID))
+        print("\tBottom radius :  {}".format(self.R1))
+        print("\tUpper radius  :  {}".format(self.R2))
+        print("\tHeitht        :  {}".format(self.H))
+        print("\tEccentricity  :  {}".format(self.E))
 
 
 class ELLIPSOIDHEAD(PRIMITIVE):
@@ -379,8 +368,8 @@ class ELLIPSOIDHEAD(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))
 
         
 class ELLIPSOIDHEAD2(PRIMITIVE):
@@ -395,8 +384,8 @@ class ELLIPSOIDHEAD2(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))
         
         
 class ELLIPSOIDSEGMENT(PRIMITIVE):
@@ -416,13 +405,13 @@ class ELLIPSOIDSEGMENT(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Big axis                :  " + str(self.RX))
-        print("\t" + "Small axis              :  " + str(self.RY))
-        print("\t" + "Complete rotation angle :  " + str(self.A1))
-        print("\t" + "Start angle of rotation :  " + str(self.A2))
-        print("\t" + "Start angle of ellipse  :  " + str(self.A3))
-        print("\t" + "End angle of ellipse    :  " + str(self.A4))
+        print("Creating {}:".format(self.ID))
+        print("\tBig axis                :  {}".format(self.RX))
+        print("\tSmall axis              :  {}".format(self.RY))
+        print("\tComplete rotation angle :  {}".format(self.A1))
+        print("\tStart angle of rotation :  {}".format(self.A2))
+        print("\tStart angle of ellipse  :  {}".format(self.A3))
+        print("\tEnd angle of ellipse    :  {}".format(self.A4))
         
         
 class HALFSPHERE(PRIMITIVE):
@@ -437,8 +426,8 @@ class HALFSPHERE(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))
         
         
 class PYRAMID(PRIMITIVE):
@@ -456,11 +445,11 @@ class PYRAMID(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "X length       :  " + str(self.L))
-        print("\t" + "Y width        :  " + str(self.W))
-        print("\t" + "Frustum height :  " + str(self.H))
-        print("\t" + "Total height   :  " + str(self.HT))
+        print("Creating {}:".format(self.ID))
+        print("\tX length       :  {}".format(self.L))
+        print("\tY width        :  {}".format(self.W))
+        print("\tFrustum height :  {}".format(self.H))
+        print("\tTotal height   :  {}".format(self.HT))
 
         
 class ROUNDRECT(PRIMITIVE):
@@ -479,12 +468,12 @@ class ROUNDRECT(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "X length       :  " + str(self.L))
-        print("\t" + "Y width        :  " + str(self.W))
-        print("\t" + "Z height       :  " + str(self.H))
-        print("\t" + "Circle radius  :  " + str(self.R2))
-        print("\t" + "Eccentricity   :  " + str(self.E))
+        print("Creating {}:".format(self.ID))
+        print("\tX length       :  {}".format(self.L))
+        print("\tY width        :  {}".format(self.W))
+        print("\tZ height       :  {}".format(self.H))
+        print("\tCircle radius  :  {}".format(self.R2))
+        print("\tEccentricity   :  {}".format(self.E))
         
         
 class SPHERESEGMENT(PRIMITIVE):
@@ -501,10 +490,10 @@ class SPHERESEGMENT(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Sphere radius  :  " + str(self.R))
-        print("\t" + "Segment height :  " + str(self.P))
-        print("\t" + "Start height   :  " + str(self.Q))
+        print("Creating {}:".format(self.ID))
+        print("\tSphere radius  :  {}".format(self.R))
+        print("\tSegment height :  {}".format(self.P))
+        print("\tStart height   :  {}".format(self.Q))
         
         
 class TORISPHERICHEAD(PRIMITIVE):
@@ -519,8 +508,8 @@ class TORISPHERICHEAD(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))
        
 
 class TORISPHERICHEAD2(PRIMITIVE):
@@ -535,8 +524,8 @@ class TORISPHERICHEAD2(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))       
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))       
         
         
 class TORISPHERICHEADH(PRIMITIVE):
@@ -552,9 +541,9 @@ class TORISPHERICHEADH(PRIMITIVE):
         self.describe()
         
     def describe(self):
-        print("Creating " + self.ID + ":")
-        print("\t" + "Radius     :  " + str(self.R))     
-        print("\t" + "Height     :  " + str(self.R))     
+        print("Creating {}:".format(self.ID))
+        print("\tRadius     :  {}".format(self.R))     
+        print("\tHeight     :  {}".format(self.R))     
         
 
 # main plant object, use it as the first argument in the script
