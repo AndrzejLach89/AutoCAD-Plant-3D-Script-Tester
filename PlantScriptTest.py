@@ -104,7 +104,7 @@ class mTransform:
         
 
 class PLANTOBJECT:
-    ID = 0
+    ID = 1
     name = "MAIN OBJECT"
     def __init__(self, name):
         self.name = name
@@ -195,7 +195,7 @@ class PRIMITIVE:
 
 class MODIFIED_OBJECT(PRIMITIVE):
     name = "MODIFIED_OBJECT"
-    ID = 0
+    ID = 1
     def __init__(self, parent1, parent2, *args):
         self.ID = "{} {}".format(MODIFIED_OBJECT.name, MODIFIED_OBJECT.ID)
         self.parent1 = parent1
@@ -210,7 +210,7 @@ class MODIFIED_OBJECT(PRIMITIVE):
         
 class CYLINDER(PRIMITIVE):
     name = "CYLINDER"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R, H, O):
         self.ID = "{} {}".format(CYLINDER.name, CYLINDER.ID)
         CYLINDER.ID += 1
@@ -232,7 +232,7 @@ class CYLINDER(PRIMITIVE):
    
 class TORUS(PRIMITIVE):
     name = "TORUS"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R1, R2):
         self.ID = "{} {}".format(TORUS.name, TORUS.ID)
         TORUS.ID += 1
@@ -252,7 +252,7 @@ class TORUS(PRIMITIVE):
        
 class ARC3D(PRIMITIVE):
     name = "ARC3D"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, D, R, A):
         self.ID = "{} {}".format(ARC3D.name, ARC3D.ID)
         ARC3D.ID += 1
@@ -272,7 +272,7 @@ class ARC3D(PRIMITIVE):
             
 class ARC3D2(PRIMITIVE):
     name = "ARC3D2"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, D, D2, R, A):
         self.ID = "{} {}".format(ARC3D2.name, ARC3D2.ID)
         ARC3D2.ID += 1
@@ -294,7 +294,7 @@ class ARC3D2(PRIMITIVE):
 
 class ARC3DS(PRIMITIVE):
     name = "ARC3DS"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, D, R, A, S):
         self.ID = "{} {}".format(ARC3DS.name, ARC3DS.ID)
         ARC3DS.ID += 1
@@ -316,7 +316,7 @@ class ARC3DS(PRIMITIVE):
         
 class BOX(PRIMITIVE):
     name = "BOX"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, L, W, H):
         self.ID = "{} {}".format(BOX.name, BOX.ID)
         BOX.ID += 1
@@ -336,7 +336,7 @@ class BOX(PRIMITIVE):
         
 class CONE(PRIMITIVE):
     name = "CONE"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R1, R2, H, E):
         self.ID = "{} {}".format(CONE.name, CONE.ID)
         CONE.ID += 1
@@ -358,7 +358,7 @@ class CONE(PRIMITIVE):
 
 class ELLIPSOIDHEAD(PRIMITIVE):
     name = "ELLIPSOIDHEAD"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R):
         self.ID = "{} {}".format(ELLIPSOIDHEAD.name, ELLIPSOIDHEAD.ID)
         ELLIPSOIDHEAD.ID += 1
@@ -374,7 +374,7 @@ class ELLIPSOIDHEAD(PRIMITIVE):
         
 class ELLIPSOIDHEAD2(PRIMITIVE):
     name = "ELLIPSOIDHEAD2"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R):
         self.ID = "{} {}".format(ELLIPSOIDHEAD2.name, ELLIPSOIDHEAD2.ID)
         ELLIPSOIDHEAD2.ID += 1
@@ -390,7 +390,7 @@ class ELLIPSOIDHEAD2(PRIMITIVE):
         
 class ELLIPSOIDSEGMENT(PRIMITIVE):
     name = "ELLIPSOIDSEGMENT"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, RX, RY, A1, A2, A3, A4):
         self.ID = "{} {}".format(ELLIPSOIDSEGMENT.name, ELLIPSOIDSEGMENT.ID)
         ELLIPSOIDSEGMENT.ID += 1
@@ -416,7 +416,7 @@ class ELLIPSOIDSEGMENT(PRIMITIVE):
         
 class HALFSPHERE(PRIMITIVE):
     name = "HALFSPHERE"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R):
         self.ID = "{} {}".format(HALFSPHERE.name, HALFSPHERE.ID)
         HALFSPHERE.ID += 1
@@ -432,7 +432,7 @@ class HALFSPHERE(PRIMITIVE):
         
 class PYRAMID(PRIMITIVE):
     name = "PYRAMID"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, L, W, H, HT):
         self.ID = "{} {}".format(PYRAMID.name, PYRAMID.ID)
         PYRAMID.ID += 1
@@ -454,7 +454,7 @@ class PYRAMID(PRIMITIVE):
         
 class ROUNDRECT(PRIMITIVE):
     name = "ROUNDRECT"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, L, W, H, R2, E):
         self.ID = "{} {}".format(ROUNDRECT.name, ROUNDRECT.ID)
         ROUNDRECT.ID += 1
@@ -478,7 +478,7 @@ class ROUNDRECT(PRIMITIVE):
         
 class SPHERESEGMENT(PRIMITIVE):
     name = "SPHERESEGMENT"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R, P, Q):
         self.ID = "{} {}".format(SPHERESEGMENT.name, SPHERESEGMENT.ID)
         SPHERESEGMENT.ID += 1
@@ -498,7 +498,7 @@ class SPHERESEGMENT(PRIMITIVE):
         
 class TORISPHERICHEAD(PRIMITIVE):
     name = "TORISPHERICHEAD"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R):
         self.ID = "{} {}".format(TORISPHERICHEAD.name, TORISPHERICHEAD.ID)
         TORISPHERICHEAD.ID += 1
@@ -514,7 +514,7 @@ class TORISPHERICHEAD(PRIMITIVE):
 
 class TORISPHERICHEAD2(PRIMITIVE):
     name = "TORISPHERICHEAD2"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R):
         self.ID = "{} {}".format(TORISPHERICHEAD2.name, TORISPHERICHEAD2.ID)
         TORISPHERICHEAD2.ID += 1
@@ -530,7 +530,7 @@ class TORISPHERICHEAD2(PRIMITIVE):
         
 class TORISPHERICHEADH(PRIMITIVE):
     name = "TORISPHERICHEADH"
-    ID = 0
+    ID = 1
     def __init__(self, s, *, R, H):
         self.ID = "{} {}".format(TORISPHERICHEADH.name, TORISPHERICHEADH.ID)
         TORISPHERICHEADH.ID += 1
