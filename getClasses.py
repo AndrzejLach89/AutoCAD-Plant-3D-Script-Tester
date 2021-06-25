@@ -3,7 +3,7 @@ import os
 class Log:
     def updateLog(content):
         content = "\n" + content
-        with open('creationErrors.log', 'a') as file:
+        with open('generationErrors.log', 'a') as file:
             file.write(content)
         
 
@@ -30,7 +30,7 @@ class Method:
         #print(nm)
         if "__init__" in nm or ' ' in nm:
             self.status = False
-            message = "DATA ERROR\n{}: NAME = {}".format(self.path, nm)
+            message = "Data error, skipping file:\n{}: NAME = {}\nWriting error info to 'generationErrors.log'".format(self.path, nm)
             print(message)
             Log.updateLog(message)
         return nm
