@@ -15,9 +15,15 @@ class Method:
         self.data = input
         self.path = path
         self.name = self.getName()
-        if self.status:
-            self.parameters = self.getParameters()
-            self.methodBody = self.writeMethodBody()
+        self.parameters = []
+        self.body = ''
+        #if self.status:
+        #    self.parameters = self.getParameters()
+        #    self.methodBody = self.writeMethodBody()
+        
+    def createMethod(self):
+        self.parameters = self.getParameters()
+        self.methodBody = self.writeMethodBody()
         
     def getName(self):
         #print(argStart)
@@ -165,6 +171,7 @@ class GetMethods:
                 continue
             else:
                 if newMethod.status:
+                    newMethod.createMethod()
                     self.validNames.append(newMethod.name)
                     methods.append(newMethod)
         return methods
