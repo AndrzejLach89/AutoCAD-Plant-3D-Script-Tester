@@ -30,7 +30,8 @@ class Method:
         #print(nm)
         if "__init__" in nm or ' ' in nm:
             self.status = False
-            message = "Data error, skipping file:\n{}: NAME = {}\nWriting error info to 'generationErrors.log'".format(self.path, nm)
+            message = "Data error, skipping file:\n{}: NAME = {}'".format(self.path, nm)
+            print('Writing error info to generationErrors.log')
             print(message)
             Log.updateLog(message)
         return nm
@@ -118,6 +119,7 @@ class GetMethods:
             self.path = path
         else:
             self.path = os.path.split(os.path.abspath(__file__))[0]
+        self.validNames = []
         self.files = self.getFiles(self.path)
         self.methodNames = self.readMethods()
         self.names = {}
@@ -149,63 +151,22 @@ class GetMethods:
             contentSplitted = content.split('\n')
             for j in contentSplitted:
                 if "def " in j:
-                    #print(j)
                     names.append((j, i))
                     break
-        #print("xxxxxxx", len(names))
         return names
-        
-    def readMethods_old(self):
-        names = []
-        for i in self.files:
-            with open(i, 'r') as file:
-                content = file.read()
-            contentSplitted = content.split('\n')
-            for j in contentSplitted:
-                if "def " in j:
-                    #print(j)
-                    names.append(j)
-                    break
-        #print("xxxxxxx", len(names))
-        return names
-        
-    def readMethods_x(self):
-        names = {}
-        for i in self.files:
-            with open(i, 'r') as file:
-                content = file.read()
-            contentSplitted = content.split('\n')
-            for j in contentSplitted:
-                if "def " in j:
-                    #print(j)
-                    #names.append(j)
-                    names[i] = j
-                    break
-        #print("xxxxxxx", len(names))
-        return names
-        
-    def createMethods_old(self):
-        methods = []
-        #print(len(self.methodNames))
-        for i in self.methodNames:
-            newMethod = Method(i)
-            #methods.append(Method(i))
-            if newMethod.status:
-                methods.append(newMethod)
-            #print(i)
-            #print("\n")
-        return methods
         
     def createMethods(self):
         methods = []
-        #print(len(self.methodNames))
         for i in self.methodNames:
             newMethod = Method(i[0], i[1])
-            #methods.append(Method(i))
-            if newMethod.status:
-                methods.append(newMethod)
-            #print(i)
-            #print("\n")
+            if newMethod.name in self.validNames:
+                print("Duplicate: skipping {}".format(newMethod.name))
+                Log.updateLog(("Duplicate: skipping {}".format(newMethod.name)))
+                continue
+            else:
+                if newMethod.status:
+                    self.validNames.append(newMethod.name)
+                    methods.append(newMethod)
         return methods
         
     def checkDuplicates(self):
@@ -222,5 +183,3 @@ class GetMethods:
             file.write(content)
         
 files = GetMethods()
-#for i in files.files:
-#    print(i)
