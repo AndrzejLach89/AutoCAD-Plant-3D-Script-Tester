@@ -31,7 +31,7 @@ class PLANTOBJECT:
         print("{}:\n\tObtaining position of connection point...".format(self.ID))
         return self
         
-    def setLinearDimension(name, vector1, vector2):
+    def setLinearDimension(self, name, vector1, vector2):
         ArgCheck.check(self.ID, (name, vector1, vector2), (str, "num", "num"))
         print("{}:\n\tAdding linear dimension at {}, {}".format(self.ID, vector1, vector2))
         return self
@@ -149,8 +149,6 @@ class TORUS(PRIMITIVE):
         print("Creating {}:".format(self.ID))
         print("\tMain radius: {}".format(self.R1))
         print("\tSec radius:  {}".format(self.R2))
-        if self.R1 <= self.R2:
-            print("\t Warning! R1 < R2")
        
        
 class ARC3D(PRIMITIVE):

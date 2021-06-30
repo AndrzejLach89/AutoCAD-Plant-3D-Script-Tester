@@ -7,5 +7,4 @@ except:
 from BasicObjects import *
 
 
-# main plant object, use it as the first argument in the script
 s = PLANTOBJECT("test_object")
