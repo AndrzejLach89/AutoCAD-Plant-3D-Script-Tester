@@ -27,13 +27,6 @@ class ScriptReader:
             data = ""
         return data
         
-    def prepareScript_old(self):
-        name = os.path.splitext(os.path.basename(self.path))[0]
-        self.script = self.script.replace('@', '#@')
-        self.script = self.script.replace("import ", "#import ")
-        self.script = self.script.replace("from ", "#from ")
-        self.script = "import PlantScriptTest\n" + self.script + "\n" + name + "(s)"
-        
     def prepareScript(self):
         name = os.path.splitext(os.path.basename(self.path))[0]
         self.scriptName = name
@@ -64,7 +57,9 @@ class ScriptReader:
         try:
             exec(self.script)
             print('\n' + ''.rjust(80, '-'))
-            print("NO ERRORS FOUND")
+            errorMessage = "NO ERRORS FOUND"
+            print(errorMessage)
+            self.updateMainLog(errorMessage)
         except Exception as e:
             #exc_type, exc_obj, exc_tb = sys.exc_info()
             #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -75,6 +70,7 @@ class ScriptReader:
             errorMessage = self.prepareMessage(traceback.format_exc())
             print(errorMessage)
             self.updateLog(errorMessage)
+            self.updateMainLog(errorMessage)
         print(''.rjust(80, '-'))
         
     def prepareMessage(self, message):
@@ -148,6 +144,12 @@ class ScriptReader:
         else:
             filename = "unnamed.log"
         Log.writeMessage(filename, msg)
+        
+    def updateMainLog(self, message):
+        header = '{}\t{}'.format(self.scriptName, datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S"))
+        msg = '{}\n{}\n{}\n'.format(header, message, ''.rjust(80, '-'))
+        filename = 'tested scripts.log'
+        Log.writeMessage(filename, msg)
     
     
 class App:
@@ -168,6 +170,25 @@ class App:
         self.root.mainloop()
     
     def getPath(self):
+        path = tkf.askopenfilenames(filetypes=[('Python file', 'py'), ('Python file', 'pyc_dis')])
+        if len(path) < 1:
+            return
+        elif path == "" or path == " " or path == None:
+            return
+        else:
+            if len(path) == 1:
+                self.path.set(path[0])
+                self.multi = False
+            else:
+                self.path.set("MULTIPLE FILES")
+                self.multi = True
+            self.paths = []
+            for i in path:
+                self.paths.append(i)
+        #print(self.paths)
+        self.runButton.config(state="normal")
+        
+    def getPath_old(self):
         path = tkf.askopenfile(filetypes=[('Python file', 'py'), ('Python file', 'pyc_dis')])
         if path == "" or path == " " or path == None:
             return
@@ -176,9 +197,22 @@ class App:
         self.runButton.config(state="normal")
     
     def runTest(self):
+        if len(self.paths) < 1:
+            return
+        elif len(self.paths) == 1:
+            self.runSingleTest()
+        elif len(self.paths) > 1:
+            self.runMultipleTests()
+        
+    def runSingleTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
             return
         test = ScriptReader(self.path.get())
+        
+    def runMultipleTests(self):
+        for i in self.paths:
+            self.path.set(i)
+            self.runSingleTest()
         
 root = tk.Tk()
 app = App(root)
