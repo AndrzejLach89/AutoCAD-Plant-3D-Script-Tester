@@ -7,9 +7,8 @@ from PlantScriptTest import *
 import tkinter as tk
 from tkinter import filedialog as tkf
 import os
-#import sys
 import traceback
-import re
+import datetime
 
 
 class ScriptReader:
@@ -73,7 +72,9 @@ class ScriptReader:
             #print(e)
             print('\n' + ''.rjust(80, '-'))
             print("ERROR FOUND\n")
-            print(self.prepareMessage(traceback.format_exc()))
+            errorMessage = self.prepareMessage(traceback.format_exc())
+            print(errorMessage)
+            self.updateLog(errorMessage)
         print(''.rjust(80, '-'))
         
     def prepareMessage(self, message):
@@ -138,6 +139,15 @@ class ScriptReader:
         newLines = messageSplitted[lineInfoNumber:]
         msg = '\n'.join(newLines)
         return msg
+        
+    def updateLog(self, message):
+        header = '{}\t{}'.format(self.scriptName, datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S"))
+        msg = '{}\n{}\n{}\n'.format(header, message, ''.rjust(80, '-'))
+        if len(self.scriptName) > 0:
+            filename = self.scriptName+'.log'
+        else:
+            filename = "unnamed.log"
+        Log.writeMessage(filename, msg)
     
     
 class App:

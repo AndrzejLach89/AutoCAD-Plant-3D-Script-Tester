@@ -27,3 +27,7 @@ class Log:
         msg = "Argument errors: {}\nDetails:\n{}\n".format(Log.argError, message)
         with open("scriptLog.txt", 'w') as file:
             file.write(msg)
+            
+    def writeMessage(file, message):
+        with open(file, 'a') as f:
+            f.write(message)
