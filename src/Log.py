@@ -8,7 +8,7 @@ class Log:
         Log.argError += 1
         #if True:
         try:
-            with open("scriptLog.txt", 'r') as file:
+            with open("scriptLog.log", 'r') as file:
                 content = file.read()
             lines = content.split("\n")
             lines[0] = "Argument errors: {}".format(Log.argError)
