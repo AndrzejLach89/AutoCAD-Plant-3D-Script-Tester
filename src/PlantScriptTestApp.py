@@ -165,9 +165,18 @@ class App:
         self.pathLabel.pack(side='left', fill='x')
         self.pathButton = tk.Button(self.pathFrame, text="Browse", command=self.getPath, bg="green", fg="white")
         self.pathButton.pack(side="right")
+        self.subFrame = tk.Frame(self.mainFrame)
+        self.subFrame.pack(fill='x')
+        self.clearButton = tk.Button(self.subFrame, text="CLEAR CONSOLE", command=self.clearConsole, state="disabled", bg="green", fg="white")
+        self.clearButton.pack(fill='x')
+        #self.reloadButton = tk.Button(self.subFrame, text="RELOAD", command=self.reloadScript, state="disabled", bg="green", fg="white")
+        #self.reloadButton.pack(side="right", fill='x')
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
         self.root.mainloop()
+    
+    def clearConsole(self, *args):
+        os.system('cls')
     
     def getPath(self):
         path = tkf.askopenfilenames(filetypes=[('Python file', 'py'), ('Python file', 'pyc_dis')])
@@ -187,6 +196,8 @@ class App:
                 self.paths.append(i)
         #print(self.paths)
         self.runButton.config(state="normal")
+        self.clearButton.config(state="normal")
+        #self.reloadButton.config(state="normal")
         
     def getPath_old(self):
         path = tkf.askopenfile(filetypes=[('Python file', 'py'), ('Python file', 'pyc_dis')])
@@ -207,7 +218,7 @@ class App:
     def runSingleTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
             return
-        test = ScriptReader(self.path.get())
+        ScriptReader(self.path.get())
         
     def runMultipleTests(self):
         for i in self.paths:
