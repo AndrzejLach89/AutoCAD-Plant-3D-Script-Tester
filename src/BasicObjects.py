@@ -1,5 +1,6 @@
 from Log import *
 from ArgCheck import *
+from Warnings import *
 
 class mTransform:
     def transform(*args):
@@ -118,6 +119,8 @@ class CYLINDER(PRIMITIVE):
         self.ID = "{} {}".format(CYLINDER.name, CYLINDER.ID)
         CYLINDER.ID += 1
         ArgCheck.check(self.ID, (R, H, O), "num")
+        ArgCheck.checkValues(self.ID, {'R':R, 'H':H})
+        ArgCheck.checkValues(self.ID, {'O':O}, True)
         self.s = s
         self.R = R
         self.H = H
@@ -140,6 +143,7 @@ class TORUS(PRIMITIVE):
         self.ID = "{} {}".format(TORUS.name, TORUS.ID)
         TORUS.ID += 1
         ArgCheck.check(self.ID, (R1, R2), ("num", "num"))
+        ArgCheck.checkValues(self.ID, {"R1":R1, "R2":R2})
         self.s = s
         self.R1 = R1
         self.R2 = R2
@@ -158,6 +162,7 @@ class ARC3D(PRIMITIVE):
         self.ID = "{} {}".format(ARC3D.name, ARC3D.ID)
         ARC3D.ID += 1
         ArgCheck.check(self.ID, (D, R, A), "num")
+        ArgCheck.checkValues(self.ID, {"D":D, "R":R, "A":A})
         self.s = s
         self.D = D
         self.R = R
@@ -178,6 +183,7 @@ class ARC3D2(PRIMITIVE):
         self.ID = "{} {}".format(ARC3D2.name, ARC3D2.ID)
         ARC3D2.ID += 1
         ArgCheck.check(self.ID, (D, D2, R, A), "num")
+        ArgCheck.checkValues(self.ID, {"D":D, "D2":D2, "R":R, "A":A})
         self.s = s
         self.D = D
         self.D2 = D2
@@ -200,6 +206,7 @@ class ARC3DS(PRIMITIVE):
         self.ID = "{} {}".format(ARC3DS.name, ARC3DS.ID)
         ARC3DS.ID += 1
         ArgCheck.check(self.ID, (D, R, A, S), "num")
+        ArgCheck.checkValues(self.ID, {"D":D, "R":R, "A":A, "S":S})
         self.s = s
         self.D = D
         self.R = R
@@ -222,6 +229,7 @@ class BOX(PRIMITIVE):
         self.ID = "{} {}".format(BOX.name, BOX.ID)
         BOX.ID += 1
         ArgCheck.check(self.ID, (L, W, H), "num")
+        ArgCheck.checkValues(self.ID, {"L":L, "W":W, "H":H})
         self.s = s
         self.L = L
         self.W = W
@@ -242,6 +250,7 @@ class CONE(PRIMITIVE):
         self.ID = "{} {}".format(CONE.name, CONE.ID)
         CONE.ID += 1
         ArgCheck.check(self.ID, (R1, R2, H, E), "num")
+        ArgCheck.checkValues(self.ID, {"R1":R1, "R2":R2, "H":H, "E":E})
         self.s = s
         self.R1 = R1
         self.R2 = R2
@@ -264,6 +273,7 @@ class ELLIPSOIDHEAD(PRIMITIVE):
         self.ID = "{} {}".format(ELLIPSOIDHEAD.name, ELLIPSOIDHEAD.ID)
         ELLIPSOIDHEAD.ID += 1
         ArgCheck.check(self.ID, R, "num")
+        ArgCheck.checkValues(self.ID, {"R":R})
         self.s = s
         self.R = R
         self.describe()
@@ -280,6 +290,7 @@ class ELLIPSOIDHEAD2(PRIMITIVE):
         self.ID = "{} {}".format(ELLIPSOIDHEAD2.name, ELLIPSOIDHEAD2.ID)
         ELLIPSOIDHEAD2.ID += 1
         ArgCheck.check(self.ID, R, "num")
+        ArgCheck.checkValues(self.ID, {"R":R})
         self.s = s
         self.R = R
         self.describe()
@@ -296,6 +307,7 @@ class ELLIPSOIDSEGMENT(PRIMITIVE):
         self.ID = "{} {}".format(ELLIPSOIDSEGMENT.name, ELLIPSOIDSEGMENT.ID)
         ELLIPSOIDSEGMENT.ID += 1
         ArgCheck.check(self.ID, (RX, RY, A1, A2, A3, A4), "num")
+        ArgCheck.checkValues(self.ID, {"RX":RX, "RY":RY, "A1":A1, "A2":A2, "A3":A3, "A4":A4})
         self.s = s
         self.RX = RX
         self.RY = RY
@@ -322,6 +334,7 @@ class HALFSPHERE(PRIMITIVE):
         self.ID = "{} {}".format(HALFSPHERE.name, HALFSPHERE.ID)
         HALFSPHERE.ID += 1
         ArgCheck.check(self.ID, R, "num")
+        ArgCheck.checkValues(self.ID, {"R":R})
         self.s = s
         self.R = R
         self.describe()
@@ -338,6 +351,8 @@ class PYRAMID(PRIMITIVE):
         self.ID = "{} {}".format(PYRAMID.name, PYRAMID.ID)
         PYRAMID.ID += 1
         ArgCheck.check(self.ID, (L, W, H, HT), "num")
+        ArgCheck.checkValues(self.ID, {"L":L, "W":W, "HT":HT})
+        ArgCheck.checkValues(self.ID, {"H":H}, True)
         self.s = s
         self.L = L
         self.W = W
@@ -360,6 +375,7 @@ class ROUNDRECT(PRIMITIVE):
         self.ID = "{} {}".format(ROUNDRECT.name, ROUNDRECT.ID)
         ROUNDRECT.ID += 1
         ArgCheck.check(self.ID, (L, W, H, R2, E), "num")
+        ArgCheck.checkValues(self.ID, {"L":L, "W":W, "H":H, "R2":R2, "E":E})
         self.s = s
         self.L = L
         self.W = W
@@ -384,6 +400,7 @@ class SPHERESEGMENT(PRIMITIVE):
         self.ID = "{} {}".format(SPHERESEGMENT.name, SPHERESEGMENT.ID)
         SPHERESEGMENT.ID += 1
         ArgCheck.check(self.ID, (R, P, Q), "num")
+        ArgCheck.checkValues(self.ID, {"R":R, "P":P, "Q":Q})
         self.s = s
         self.R = R
         self.P = P
@@ -404,6 +421,7 @@ class TORISPHERICHEAD(PRIMITIVE):
         self.ID = "{} {}".format(TORISPHERICHEAD.name, TORISPHERICHEAD.ID)
         TORISPHERICHEAD.ID += 1
         ArgCheck.check(self.ID, R, "num")
+        ArgCheck.checkValues(self.ID, {"R":R})
         self.s = s
         self.R = R
         self.describe()
@@ -420,6 +438,7 @@ class TORISPHERICHEAD2(PRIMITIVE):
         self.ID = "{} {}".format(TORISPHERICHEAD2.name, TORISPHERICHEAD2.ID)
         TORISPHERICHEAD2.ID += 1
         ArgCheck.check(self.ID, R, "num")
+        ArgCheck.checkValues(self.ID, {"R":R})
         self.s = s
         self.R = R
         self.describe()
@@ -436,6 +455,7 @@ class TORISPHERICHEADH(PRIMITIVE):
         self.ID = "{} {}".format(TORISPHERICHEADH.name, TORISPHERICHEADH.ID)
         TORISPHERICHEADH.ID += 1
         ArgCheck.check(self.ID, (R, H), "num")
+        ArgCheck.checkValues(self.ID, {"R":R, "H":H})
         self.s = s
         self.R = R
         self.H = H

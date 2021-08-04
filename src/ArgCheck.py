@@ -1,3 +1,6 @@
+from Warnings import *
+
+
 class ArgCheck:
     def check(ID, arguments, types):
         argType = type(arguments)
@@ -21,6 +24,7 @@ class ArgCheck:
             status = False
         if not status:
             msg = "{}: Argument of type {}, required {}!".format(ID, type(arg), typ)
+            Warnings.add(msg)
             Log.updateLog(msg)
         return status
         
@@ -38,6 +42,7 @@ class ArgCheck:
             if len(arguments) != len(types):
                 msg = "{}: Wrong arguments number! {} arguments given, {} required.".format(ID, len(arguments), len(types))
                 Log.updateLog(msg)
+                Warnings.add(msg)
                 print(msg)
                 status = False
                 return status
@@ -49,13 +54,41 @@ class ArgCheck:
                 if type(a) != int and type(a) != float:
                     msg = "{}: Argument at position {} of type {}, required {}!".format(ID, cnt, type(a), "int/float")
                     Log.updateLog(msg)
+                    Warnings.add(msg)
                     print(msg)
                     status = False
             #elif type(a) != t:
             elif type(a) != t:#issubclass(a, t):
                 msg = "{}: Argument at position {} of type {}, required {}!".format(ID, cnt, type(a), t)
                 Log.updateLog(msg)
+                Warnings.add(msg)
                 print(msg)
                 status = False
             cnt += 1
         return status
+        
+    def checkValues(ID, arg, zero=False):
+        status = True
+        t = 'greater'
+        if zero:
+            t = 'equal or greater'
+        for i in arg:
+            if not ArgCheck.checkValue(arg[i], zero):
+                msg = "{}: Given value {}={} must be {} than 0!".format(ID, i, arg[i], t)
+                Warnings.add(msg)
+                Log.updateLog(msg)
+                
+    def checkValue(arg, zero=False):
+        try:
+            if zero:
+                if arg < 0:
+                    return False
+                else:
+                    return True
+            else:
+                if arg <= 0:
+                    return False
+                else:
+                    return True
+        except:
+            return False

@@ -59,17 +59,18 @@ class ScriptReader:
         try:
             exec(self.script)
             print('\n' + ''.rjust(80, '-'))
-            errorMessage = "NO ERRORS FOUND"
+            errorMessage = "NO EXECUTION ERRORS FOUND"
             print(errorMessage)
             self.updateMainLog(errorMessage)
         except Exception as e:
             print('\n' + ''.rjust(80, '-'))
-            print("ERROR FOUND\n")
+            print("EXECUTION ERROR FOUND\n")
             errorMessage = self.prepareMessage(traceback.format_exc())
             print(errorMessage)
             self.updateLog(errorMessage)
             self.updateMainLog(errorMessage)
         print(''.rjust(80, '-'))
+        Warnings.presentResults()
         
     def prepareMessage(self, message):
         def findNumber(line):
@@ -251,6 +252,7 @@ class App:
         #self.reloadButton.pack(side="right", fill='x')
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
+        self.root.resizable(False, False)
         self.root.mainloop()
     
     def clearConsole(self, *args):
