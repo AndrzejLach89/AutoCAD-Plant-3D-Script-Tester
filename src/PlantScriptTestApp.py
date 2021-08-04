@@ -47,12 +47,14 @@ class ScriptReader:
             script = script + line
         self.script = script + '\n' + name + "(s)"
         
-        
-        #self.script = "import PlantScriptTest\n" + self.script + "\n" + name + "(s)"
-        
     def executeScript(self):
         #exec(self.script)
         print('Testing script: {}'.format(self.path))
+        print(''.rjust(80, '='))
+        print('Checking activation parameters')
+        self.checkActivation()
+        print(''.rjust(80, '-'))
+        print('Executing script')
         print(''.rjust(80, '-'))
         try:
             exec(self.script)
@@ -61,10 +63,6 @@ class ScriptReader:
             print(errorMessage)
             self.updateMainLog(errorMessage)
         except Exception as e:
-            #exc_type, exc_obj, exc_tb = sys.exc_info()
-            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            #print(exc_type, fname, exc_tb.tb_lineno)
-            #print(e)
             print('\n' + ''.rjust(80, '-'))
             print("ERROR FOUND\n")
             errorMessage = self.prepareMessage(traceback.format_exc())
@@ -150,6 +148,86 @@ class ScriptReader:
         msg = '{}\n{}\n{}\n'.format(header, message, ''.rjust(80, '-'))
         filename = 'tested scripts.log'
         Log.writeMessage(filename, msg)
+        
+    def checkActivation(self):
+        errors = False
+        errorsLog = []
+        parameters = []
+        script = self.script.split('\n')
+        inActivation = False
+        activationLines = []
+        for i in script:
+            #if len(i) < 2:
+            #    continue
+            if not inActivation and '@activate' in i:# and i[1] == '@':
+                inActivation = True
+            elif "@group" in i:
+                continue
+            elif inActivation and "@param" not in i:#i[1] != '@':
+                break
+            if inActivation and "@param" in i:#i[1] == '@':
+                activationLines.append(i)
+        cnt = 0
+        while cnt < len(activationLines):
+            line = activationLines[cnt].split('(')
+            item = line[0]
+            if 'activate' in item:
+                pass
+            elif 'group' in item:
+                pass
+            elif 'param'  in item:
+                elements = line[1].split(',')
+                parameters.append(elements[0].split('=')[0])
+            cnt += 1
+        
+        definition = ''
+        for i in script:
+            if i[:3] == 'def':
+                definition = i
+                break
+        if len(definition) == 0:
+            print('Parameters not found')
+            return
+        defParams = definition.split('(')[1].split(',')
+        cnt = 0
+        while cnt < len(defParams):
+            defParams[cnt] = defParams[cnt].replace(' ', '')
+            defParams[cnt] = defParams[cnt].replace(')', '')
+            defParams[cnt] = defParams[cnt].replace(':', '')
+            try:
+                defParams[cnt] = defParams[cnt].split('=')[0]
+            except:
+                pass
+            cnt += 1
+        
+        ERRORS = False
+        # check errors
+        if defParams[0] != 's':
+            errorsLog.append("Plant object reference (s) not found in function definition")
+            ERRORS = True
+        for i in defParams:
+            if i == '**kw' or i=='ID' or i=='s':
+                continue
+            if i not in parameters:
+                errorsLog.append("Parameter '{}' from function definition not found in activation section!".format(i))
+                ERRORS = True
+        for i in parameters:
+            if i not in defParams:
+                errorsLog.append("Parameter '{}' from activation section not found in function definition!".format(i))
+                ERRORS = True
+                
+        if not ERRORS:
+            print(''.rjust(80, '-'))
+            errorMessage = "NO ACTIVATION ERRORS FOUND"
+            print(errorMessage)
+            self.updateMainLog(errorMessage)
+        else:
+            print('\n' + ''.rjust(80, '-'))
+            errorMessage = "ACTIVATION ERRORS FOUND"
+            print(errorMessage)
+            for i in errorsLog:
+                print(i)
+            self.updateMainLog(errorMessage)
     
     
 class App:
@@ -224,6 +302,6 @@ class App:
         for i in self.paths:
             self.path.set(i)
             self.runSingleTest()
-        
+            
 root = tk.Tk()
 app = App(root)
