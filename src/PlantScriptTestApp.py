@@ -31,8 +31,8 @@ class ScriptReader:
         name = os.path.splitext(os.path.basename(self.path))[0]
         self.scriptName = name
         self.script = self.script.replace('@', '#@')
-        self.script = self.script.replace("import ", "#import ")
-        self.script = self.script.replace("from ", "#from ")
+        #self.script = self.script.replace("import ", "#import ")
+        #self.script = self.script.replace("from ", "#from ")
         
         script = "import PlantScriptTest\n"
         self.scriptSplitted = self.script.split('\n')
@@ -40,7 +40,9 @@ class ScriptReader:
         for i in self.scriptSplitted:
             if not function and "def " in i:
                 function = True
-            if not function:
+            if not function and "import" in i:
+                line = "try:\n    {}\n    print('{} - module imported')\nexcept:\n    print('{} - module could not be imported')\n".format(i, i, i)
+            elif not function:
                 line = '#' + i + '\n'
             else:
                 line = i + '\n'
@@ -230,7 +232,22 @@ class ScriptReader:
                 print(i)
             self.updateMainLog(errorMessage)
     
+'''class Console:
+    text = tk.StringVar()
     
+    def clear():
+        Console.text.set('')
+        
+    def add(text):
+        if type(text) == string:
+            Console.text.set("{}\n{}".format(Console.text.get(), text))
+        else:
+            try:
+                for i in text:
+                    Console.text.set("{}\n{}".format(Console.text.get(), i))
+            except:
+                return'''
+
 class App:
     def __init__(self, root):
         self.root = root
@@ -252,6 +269,14 @@ class App:
         #self.reloadButton.pack(side="right", fill='x')
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
+        #self.consoleFrame = tk.Frame(self.root, height=600)
+        #self.consoleFrame.pack(fill='both', expand=True)
+        #os.system('xterm -into %d -geometry 40x20 -sb &' % self.consoleFrame.winfo_id())
+        
+        #from tkinter import ttk
+        #from tkinter import scrolledText
+        #self.console = tk.Text(self.consoleFrame, wrap=tk.WORD, font=("Courier", 10), fg="green2", bg="black")
+        #self.console.pack()
         self.root.resizable(False, False)
         self.root.mainloop()
     
@@ -294,6 +319,7 @@ class App:
             self.runSingleTest()
         elif len(self.paths) > 1:
             self.runMultipleTests()
+        self.resetID()
         
     def runSingleTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
@@ -304,6 +330,29 @@ class App:
         for i in self.paths:
             self.path.set(i)
             self.runSingleTest()
+            
+    def resetID(self):
+        classes = [PLANTOBJECT,
+            MODIFIED_OBJECT,
+            CYLINDER,
+            TORUS,
+            ARC3D,
+            ARC3D2,
+            ARC3DS,
+            BOX,
+            CONE,
+            ELLIPSOIDHEAD,
+            ELLIPSOIDHEAD2,
+            ELLIPSOIDSEGMENT,
+            HALFSPHERE,
+            PYRAMID,
+            ROUNDRECT,
+            SPHERESEGMENT,
+            TORISPHERICHEAD,
+            TORISPHERICHEAD2,
+            TORISPHERICHEADH]
+        for i in classes:
+            i.ID = 1
             
 root = tk.Tk()
 app = App(root)

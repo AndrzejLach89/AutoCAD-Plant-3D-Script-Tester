@@ -1,5 +1,5 @@
 from Warnings import *
-
+from Log import *
 
 class ArgCheck:
     def check(ID, arguments, types):
