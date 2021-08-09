@@ -4,3 +4,5 @@ backup
 *.spec
 dist
 build
+*egg-info*
+scriptLog*
