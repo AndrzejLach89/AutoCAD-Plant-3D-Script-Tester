@@ -1,3 +1,5 @@
+from TestResults import *
+
 class Warnings:
     warnings = []
     def add(text):
@@ -12,3 +14,6 @@ class Warnings:
         for i in Warnings.warnings:
             print(i)
         print(''.rjust(80, '-'))
+        
+    def pushResults():
+        TestResults.addWarning(Warnings.warnings)
