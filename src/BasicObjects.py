@@ -14,10 +14,10 @@ class PLANTOBJECT:
         self.name = name
         self.ID = "{} {}".format(PLANTOBJECT.name, PLANTOBJECT.ID)
         
-    def setPoint(self, position, direction):
-        ArgCheck.check(self.ID, (position, direction), ("num", "num"))
+    def setPoint(self, position, direction, angle=0):
+        ArgCheck.check(self.ID, (position, direction, angle), ("num", "num", "num"))
         #print("  >{}: Adding point at {}, direction: {}".format(self.ID, position, direction))
-        print("{}:\n\tAdding point at {}, direction: {}".format(self.ID, position, direction))
+        print("{}:\n\tAdding point at {}, direction: {}, angle: {}".format(self.ID, position, direction, angle))
         return self
         
     def numberOfPoints(self, *args):

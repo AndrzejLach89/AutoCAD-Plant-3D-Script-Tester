@@ -7,7 +7,7 @@ from PlantScriptTest import *
 class ScriptReader:
     def __init__(self, path):
         self.path = path
-        self.addedLines = 0
+        self.addedLines = 1
         self.scriptName = ''
         self.script = self.readScript()
         self.prepareScript()
@@ -22,52 +22,105 @@ class ScriptReader:
         return data
         
     def prepareScript(self):
+        def getIndent(line):
+            indent = 0
+            for i in line:
+                if i == ' ':
+                    indent += 1
+                elif i == '\t':
+                    indent += 4
+                else:
+                    break
+            return indent
+        def checkLine(line):
+            empty = ['', ' ', '\n', '\t']
+            if len(line) == 0:
+                return False
+            if line == '':
+                return False
+            if line[0] == '\n':
+                return False
+            if not line[0] == ' ' or line[0] == '\t' or line[0] == '#' or '"""' in line or "'''" in line:
+                return False
+            notEmpty = False
+            for i in line:
+                if i not in empty:
+                    notEmpty = True
+            if notEmpty:
+                return True
+            else:
+                return False
+            
         name = os.path.splitext(os.path.basename(self.path))[0]
         self.scriptName = name
         self.script = self.script.replace('@', '#@')
+        self.script = self.script.replace('\t', '    ')
         #self.script = self.script.replace("import ", "#import ")
         #self.script = self.script.replace("from ", "#from ")
         
+        dependencies = []
         script = "import PlantScriptTest\n"
         self.scriptSplitted = self.script.split('\n')
         function = False
+        indent = ''
+        cnt = 0
         for i in self.scriptSplitted:
             if not function and "def " in i:
                 function = True
-            if not function and "import" in i:
-                line = "try:\n    {}\n    print('{}'.ljust(45, ' ') + ' - module imported')\nexcept:\n    print('{}'.ljust(45, ' ') + ' - module could not be imported')\n".format(i, i, i)
-                self.addedLines += 4
-            elif not function:
-                line = '#' + i + '\n'
-            else:
+                addGlobals = True
+                indent = ''
+                try:
+                    mc = 1
+                    while not checkLine(self.scriptSplitted[cnt+mc]):
+                        mc += 1
+                        print('juju')
+                    indentLength = getIndent(self.scriptSplitted[cnt+mc])
+                except:
+                    indentLength = 4
+                indent = ''.rjust(indentLength, ' ')
                 line = i + '\n'
+            elif not function and "import" in i:
+                line = ''
+                if "from" not in i:
+                    dependencies.append(i)
+                addGlobals = False
+            elif not function:
+                line = '#{}\n'.format(i)
+                #line = '#' + i + '\n'
+                addGlobals = False
+            else:
+                line = '{}\n'.format(i)
+                addGlobals = False
             script = script + line
-        self.script = script + '\n' + name + "(s)"
+            if addGlobals:
+                script = script + self.addDependencies(dependencies, indent) + '\n'
+            cnt += 1
+        self.script = '{}\n{}(s)'.format(script, name)
+        print(self.script)
+    
+    def addDependencies(self, dependencies, indent):
+        output = ''
+        for i in dependencies:
+            output = output + f"{indent}try:\n{indent}    {i}\n{indent}    print('{i}'.ljust(45, ' ') + ' - module imported')\n{indent}except:\n{indent}    print('{i}'.ljust(45, ' ') + ' - module could not be imported')\n"
+            self.addedLines += 3
+        return output
         
     def executeScript(self):
         print('Testing script: {}'.format(self.path))
         print(''.rjust(80, '='))
         print('Checking activation parameters...')
         self.checkActivation()
-        #print(''.rjust(80, '-'))
         print('Executing script...')
         print(''.rjust(80, '-'))
         try:
             exec(self.script)
-            #print('\n' + ''.rjust(80, '-'))
             errorMessage = "NO EXECUTION ERRORS FOUND"
-            #print(errorMessage)
             self.updateMainLog(errorMessage)
         except Exception as e:
-            #print('\n' + ''.rjust(80, '-'))
-            #print("EXECUTION ERROR FOUND\n")
             errorMessage = self.prepareMessage(traceback.format_exc())
-            #print(errorMessage)
             self.updateLog(errorMessage)
             self.updateMainLog(errorMessage)
             TestResults.addExecution(errorMessage)
-        #print(''.rjust(80, '-'))
-        #Warnings.presentResults()
         Warnings.pushResults()
         TestResults.printResults()
         
@@ -99,7 +152,7 @@ class ScriptReader:
             lineNumber = 0
             found = False
             for i in messageLines:
-                if "File" in i and "line" in i:
+                if "File" in i and "line" in i and "<" in i:
                     found = True
                     lineNumber = cnt
                 cnt += 1
@@ -114,9 +167,12 @@ class ScriptReader:
             newLine = line[:start] + number + line[end:]
             return newLine
         def updateScriptName(line, name):
-            start = line.index('<')
-            end = line.index('>')+1
-            newLine = line[:start] + name + line[end:]
+            try:
+                start = line.index('<')
+                end = line.index('>')+1
+                newLine = line[:start] + name + line[end:]
+            except:
+                return line
             return newLine
         
         messageSplitted = message.split('\n')
@@ -125,14 +181,14 @@ class ScriptReader:
         if lineInfoNumber == None:
             return message
         info = findNumber(messageSplitted[lineInfoNumber])
-        try:
-            newLineNumber = info[0] - self.addedLines
+        if True:#try:
+            newLineNumber = int(info[0]) - self.addedLines
             if len(str(newLineNumber)) != len(str(info[0])):
                 endIndex = info[2] + len(str(newLineNumber)) - len(str(info[0]))
             else:
                 endIndex = info[2]
             lineInfoData = (newLineNumber, info[1], endIndex)
-        except:
+        else:#except:
             lineInfoData = info
         if None in lineInfoData:
             return message

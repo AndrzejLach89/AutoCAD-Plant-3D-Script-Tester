@@ -4,13 +4,10 @@
 # script to check for errors. If no problems were found, continue with checking your script in Plant 3D.
 # Author: Andrzej Lach
 from PlantScriptTest import *
+from ScriptReader import *
 import tkinter as tk
 from tkinter import filedialog as tkf
 import os
-#import traceback
-#import datetime
-#from TestResults import *
-from ScriptReader import *
     
 '''class Console:
     text = tk.StringVar()
@@ -46,18 +43,12 @@ class App:
         self.subFrame.pack(fill='x')
         self.clearButton = tk.Button(self.subFrame, text="CLEAR CONSOLE", command=self.clearConsole, state="disabled", bg="green", fg="white")
         self.clearButton.pack(fill='x')
-        #self.reloadButton = tk.Button(self.subFrame, text="RELOAD", command=self.reloadScript, state="disabled", bg="green", fg="white")
-        #self.reloadButton.pack(side="right", fill='x')
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
         #self.consoleFrame = tk.Frame(self.root, height=600)
         #self.consoleFrame.pack(fill='both', expand=True)
         #os.system('xterm -into %d -geometry 40x20 -sb &' % self.consoleFrame.winfo_id())
         
-        #from tkinter import ttk
-        #from tkinter import scrolledText
-        #self.console = tk.Text(self.consoleFrame, wrap=tk.WORD, font=("Courier", 10), fg="green2", bg="black")
-        #self.console.pack()
         self.root.resizable(False, False)
         self.root.mainloop()
     
@@ -84,14 +75,6 @@ class App:
         self.runButton.config(state="normal")
         self.clearButton.config(state="normal")
         #self.reloadButton.config(state="normal")
-        
-    def getPath_old(self):
-        path = tkf.askopenfile(filetypes=[('Python file', 'py'), ('Python file', 'pyc_dis')])
-        if path == "" or path == " " or path == None:
-            return
-        else:
-            self.path.set(path.name)
-        self.runButton.config(state="normal")
     
     def runTest(self):
         if len(self.paths) < 1:
@@ -105,7 +88,8 @@ class App:
     def runSingleTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
             return
-        ScriptReader(self.path.get())
+        if os.path.exists(self.path.get()):
+            ScriptReader(self.path.get())
         
     def runMultipleTests(self):
         for i in self.paths:
