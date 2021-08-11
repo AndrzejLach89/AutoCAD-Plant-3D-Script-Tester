@@ -1,0 +1,2 @@
+class Settings:
+    ShowScriptBody = False

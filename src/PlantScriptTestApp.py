@@ -5,6 +5,7 @@
 # Author: Andrzej Lach
 from PlantScriptTest import *
 from ScriptReader import *
+from Settings import *
 import tkinter as tk
 from tkinter import filedialog as tkf
 import os
@@ -31,6 +32,8 @@ class App:
         self.root = root
         self.root.title("PlantScriptTest App")
         self.path = tk.StringVar()
+        self.showScriptVar = tk.IntVar()
+        self.updateVar()
         self.mainFrame = tk.Frame(self.root, bg="black")
         self.mainFrame.pack()
         self.pathFrame = tk.Frame(self.mainFrame, bg="black")
@@ -43,6 +46,7 @@ class App:
         self.subFrame.pack(fill='x')
         self.clearButton = tk.Button(self.subFrame, text="CLEAR CONSOLE", command=self.clearConsole, state="disabled", bg="green", fg="white")
         self.clearButton.pack(fill='x')
+        #self.clearButton = tk.Button(self.subFrame
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
         #self.consoleFrame = tk.Frame(self.root, height=600)
@@ -51,6 +55,18 @@ class App:
         
         self.root.resizable(False, False)
         self.root.mainloop()
+    
+    def updateVar(self):
+        if Settings.ShowScriptBody:
+            self.showScriptVar.set(1)
+        else:
+            self.showScriptVar.set(0)
+            
+    def updateSettings(self):
+        if self.showScriptVar.get() == 1:
+            Settings.ShowScriptBody = True
+        else:
+            Settings.ShowScriptBody = False
     
     def clearConsole(self, *args):
         os.system('cls')

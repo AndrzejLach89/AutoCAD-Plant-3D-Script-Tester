@@ -3,11 +3,12 @@ import traceback
 import datetime
 from TestResults import *
 from PlantScriptTest import *
+from Settings import *
 
 class ScriptReader:
     def __init__(self, path):
         self.path = path
-        self.addedLines = 1
+        self.addedLines = 2
         self.scriptName = ''
         self.script = self.readScript()
         self.prepareScript()
@@ -50,13 +51,16 @@ class ScriptReader:
                 return True
             else:
                 return False
-            
+        def breakline(x='-', length=80):
+            if not isinstance(x, str):
+                x = '-'
+            if len(x) > 1:
+                x = x[0]
+            return ''.rjust(length, x)
         name = os.path.splitext(os.path.basename(self.path))[0]
         self.scriptName = name
         self.script = self.script.replace('@', '#@')
         self.script = self.script.replace('\t', '    ')
-        #self.script = self.script.replace("import ", "#import ")
-        #self.script = self.script.replace("from ", "#from ")
         
         dependencies = []
         script = "import PlantScriptTest\n"
@@ -65,6 +69,7 @@ class ScriptReader:
         indent = ''
         cnt = 0
         for i in self.scriptSplitted:
+            # place when function definition begins
             if not function and "def " in i:
                 function = True
                 addGlobals = True
@@ -73,36 +78,44 @@ class ScriptReader:
                     mc = 1
                     while not checkLine(self.scriptSplitted[cnt+mc]):
                         mc += 1
-                        print('juju')
                     indentLength = getIndent(self.scriptSplitted[cnt+mc])
                 except:
                     indentLength = 4
                 indent = ''.rjust(indentLength, ' ')
-                line = i + '\n'
+                line = f'{i}\n'
+            # imports outside the function definition
             elif not function and "import" in i:
-                line = ''
+                line = f'#{i}\n'
                 if "from" not in i:
                     dependencies.append(i)
                 addGlobals = False
+            # lines before function definition
             elif not function:
-                line = '#{}\n'.format(i)
-                #line = '#' + i + '\n'
+                line = f'#{i}\n'
                 addGlobals = False
+            # lines inside and below the function definition
             else:
-                line = '{}\n'.format(i)
+                line = f'{i}\n'
                 addGlobals = False
             script = script + line
+            # add imports inside function definition
             if addGlobals:
                 script = script + self.addDependencies(dependencies, indent) + '\n'
             cnt += 1
-        self.script = '{}\n{}(s)'.format(script, name)
-        print(self.script)
+        # add a line to invoke tested function
+        self.script = f'{script}\n{name}(s)'
+        if Settings.ShowScriptBody:
+            print(breakline())
+            print("SCRIPT BODY")
+            print(breakline())
+            print(self.script)
+            print(breakline('='))
     
     def addDependencies(self, dependencies, indent):
         output = ''
         for i in dependencies:
             output = output + f"{indent}try:\n{indent}    {i}\n{indent}    print('{i}'.ljust(45, ' ') + ' - module imported')\n{indent}except:\n{indent}    print('{i}'.ljust(45, ' ') + ' - module could not be imported')\n"
-            self.addedLines += 3
+            self.addedLines += 5
         return output
         
     def executeScript(self):
@@ -129,7 +142,6 @@ class ScriptReader:
             cnt = 0
             number = ''
             started = False
-            #closed = False
             startIndex = None
             endIndex = None
             for i in line:
@@ -161,7 +173,7 @@ class ScriptReader:
             else:
                 return lineNumber
         def updateLineNumber(line, data):
-            number = str(int(data[0]) - 1)
+            number = str(int(data[0]))
             start = data[1]
             end = data[2]
             newLine = line[:start] + number + line[end:]
@@ -181,14 +193,14 @@ class ScriptReader:
         if lineInfoNumber == None:
             return message
         info = findNumber(messageSplitted[lineInfoNumber])
-        if True:#try:
+        try:
             newLineNumber = int(info[0]) - self.addedLines
             if len(str(newLineNumber)) != len(str(info[0])):
                 endIndex = info[2] + len(str(newLineNumber)) - len(str(info[0]))
             else:
                 endIndex = info[2]
             lineInfoData = (newLineNumber, info[1], endIndex)
-        else:#except:
+        except:
             lineInfoData = info
         if None in lineInfoData:
             return message
@@ -224,15 +236,13 @@ class ScriptReader:
         inActivation = False
         activationLines = []
         for i in script:
-            #if len(i) < 2:
-            #    continue
-            if not inActivation and '@activate' in i:# and i[1] == '@':
+            if not inActivation and '@activate' in i:
                 inActivation = True
             elif "@group" in i:
                 continue
-            elif inActivation and "@param" not in i:#i[1] != '@':
+            elif inActivation and "@param" not in i:
                 break
-            if inActivation and "@param" in i:#i[1] == '@':
+            if inActivation and "@param" in i:
                 activationLines.append(i)
         cnt = 0
         while cnt < len(activationLines):
@@ -284,15 +294,10 @@ class ScriptReader:
                 ERRORS = True
                 
         if not ERRORS:
-            #print(''.rjust(80, '-'))
             errorMessage = "NO ACTIVATION ERRORS FOUND"
-            #print(errorMessage)
             self.updateMainLog(errorMessage)
         else:
-            #print('\n' + ''.rjust(80, '-'))
             errorMessage = "ACTIVATION ERRORS FOUND"
-            #print(errorMessage)
             for i in errorsLog:
                 TestResults.addActivation(i)
-                #print(i)
             self.updateMainLog(errorMessage)
