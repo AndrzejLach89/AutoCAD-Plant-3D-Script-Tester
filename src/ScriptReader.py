@@ -229,6 +229,27 @@ class ScriptReader:
         Log.writeMessage(filename, msg)
         
     def checkActivation(self):
+        def checkCategory(line):
+            avaliableCategories = ['Elbow', 'Coupling', 'Cross', 'Crossover', 'Lateral', 'Nipple', 'Reducer', 'Swage', 'Sleeve', 'Tee', 'Wye', 'BleedRing', 'BlindDisk', 'Cap', 'OrificePlate', 'Plug', 'SpacerDisk', 'SpectacleBlind', 'Strainer', 'Olet', 'ElbowSideOutlet', 'TeeSideOutlet', 'Flange', 'BlindFlange', 'Pipe', 'Valve', 'ValveBody', 'ValveActuator', 'Instrument']
+            category = ''
+            #@activate(Group="Tee", TooltipShort="Cable tray tee - vertical", TooltipLong="Cable tray tee - vertical",  LengthUnit="mm", Ports=3)
+            line = line.split('(')[1]
+            line = line.split(',')
+            group = []
+            for i in line:
+                if "Group" in i:
+                    group = i.split('=')
+                    break
+            if len(group) < 2:
+                return False
+            groupName = group[1]
+            groupName = groupName.replace('"', '').replace("'", '').replace(' ', '')
+            if groupName not in avaliableCategories:
+                return groupName
+            else:
+                return False
+                
+        categoryError = False
         errors = False
         errorsLog = []
         parameters = []
@@ -237,6 +258,7 @@ class ScriptReader:
         activationLines = []
         for i in script:
             if not inActivation and '@activate' in i:
+                categoryError = checkCategory(i)
                 inActivation = True
             elif "@group" in i:
                 continue
@@ -279,6 +301,9 @@ class ScriptReader:
         
         ERRORS = False
         # check errors
+        if categoryError != False:
+            errorsLog.append(f'Unknown part category: {categoryError}!')
+            ERRORS = True
         if defParams[0] != 's':
             errorsLog.append("Plant object reference (s) not found in function definition")
             ERRORS = True

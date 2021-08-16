@@ -43,18 +43,31 @@ class App:
         self.pathButton = tk.Button(self.pathFrame, text="Browse", command=self.getPath, bg="green", fg="white")
         self.pathButton.pack(side="right")
         self.subFrame = tk.Frame(self.mainFrame)
-        self.subFrame.pack(fill='x')
+        self.subFrame.pack(fill='x', expand=True)
         self.clearButton = tk.Button(self.subFrame, text="CLEAR CONSOLE", command=self.clearConsole, state="disabled", bg="green", fg="white")
-        self.clearButton.pack(fill='x')
-        #self.clearButton = tk.Button(self.subFrame
+        self.clearButton.pack(fill='x', side='right', expand=True)
+        self.showScriptButton = tk.Button(self.subFrame, text="SHOW SCRIPT BODY", command=self.showBody, state="normal", bg="black", fg="green")
+        self.showScriptButton.pack(side='left',fill='both', expand=True)
         self.runButton = tk.Button(self.mainFrame, text="TEST SCRIPT", command=self.runTest, state="disabled", bg="green", fg="white")
         self.runButton.pack(fill='x')
-        #self.consoleFrame = tk.Frame(self.root, height=600)
-        #self.consoleFrame.pack(fill='both', expand=True)
-        #os.system('xterm -into %d -geometry 40x20 -sb &' % self.consoleFrame.winfo_id())
-        
+        self.updateButton()
         self.root.resizable(False, False)
         self.root.mainloop()
+    
+    def showBody(self):
+        if self.showScriptVar.get() == 1:
+            self.showScriptVar.set(0)
+        else:
+            self.showScriptVar.set(1)
+        self.updateButton()
+        self.updateSettings()
+        
+    def updateButton(self):
+        if self.showScriptVar.get() == 1:
+            self.showScriptButton.config(bg="green3", fg="black", relief="sunken")
+        else:
+            self.showScriptButton.config(bg="green", fg="white", relief="raised")
+            
     
     def updateVar(self):
         if Settings.ShowScriptBody:
