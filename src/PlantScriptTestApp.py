@@ -9,22 +9,7 @@ from Settings import *
 import tkinter as tk
 from tkinter import filedialog as tkf
 import os
-    
-'''class Console:
-    text = tk.StringVar()
-    
-    def clear():
-        Console.text.set('')
-        
-    def add(text):
-        if type(text) == string:
-            Console.text.set("{}\n{}".format(Console.text.get(), text))
-        else:
-            try:
-                for i in text:
-                    Console.text.set("{}\n{}".format(Console.text.get(), i))
-            except:
-                return'''
+
 
 class App:
     def __init__(self, root):

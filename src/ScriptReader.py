@@ -4,12 +4,15 @@ import datetime
 from TestResults import *
 from PlantScriptTest import *
 from Settings import *
+from Utilities import *
+
 
 class ScriptReader:
     def __init__(self, path):
         self.path = path
         self.addedLines = 2
         self.scriptName = ''
+        TestResults.clearResults()
         self.script = self.readScript()
         self.prepareScript()
         self.executeScript()
@@ -51,12 +54,14 @@ class ScriptReader:
                 return True
             else:
                 return False
-        def breakline(x='-', length=80):
+        '''def breakline(x='-', length=-1):
+            if length < 0:
+                length = Settings.LineLength
             if not isinstance(x, str):
                 x = '-'
             if len(x) > 1:
                 x = x[0]
-            return ''.rjust(length, x)
+            return ''.rjust(length, x)'''
         name = os.path.splitext(os.path.basename(self.path))[0]
         self.scriptName = name
         self.script = self.script.replace('@', '#@')
@@ -105,11 +110,11 @@ class ScriptReader:
         # add a line to invoke tested function
         self.script = f'{script}\n{name}(s)'
         if Settings.ShowScriptBody:
-            print(breakline())
+            print(BreakLine())
             print("SCRIPT BODY")
-            print(breakline())
+            print(BreakLine())
             print(self.script)
-            print(breakline('='))
+            print(BreakLine('='))
     
     def addDependencies(self, dependencies, indent):
         output = ''
@@ -120,11 +125,11 @@ class ScriptReader:
         
     def executeScript(self):
         print('Testing script: {}'.format(self.path))
-        print(''.rjust(80, '='))
+        print(BreakLine('='))
         print('Checking activation parameters...')
         self.checkActivation()
         print('Executing script...')
-        print(''.rjust(80, '-'))
+        print(BreakLine('-'))
         try:
             exec(self.script)
             errorMessage = "NO EXECUTION ERRORS FOUND"
