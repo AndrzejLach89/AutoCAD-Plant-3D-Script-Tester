@@ -85,10 +85,8 @@ class App:
             self.paths = []
             for i in path:
                 self.paths.append(i)
-        #print(self.paths)
         self.runButton.config(state="normal")
         self.clearButton.config(state="normal")
-        #self.reloadButton.config(state="normal")
     
     def runTest(self):
         if len(self.paths) < 1:
@@ -97,13 +95,13 @@ class App:
             self.runSingleTest()
         elif len(self.paths) > 1:
             self.runMultipleTests()
-        self.resetID()
         
     def runSingleTest(self):
         if self.path.get() == "" or self.path.get() == " " or self.path.get() == None:
             return
         if os.path.exists(self.path.get()):
             ScriptReader(self.path.get())
+            self.resetID()
         
     def runMultipleTests(self):
         for i in self.paths:
