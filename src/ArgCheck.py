@@ -92,3 +92,14 @@ class ArgCheck:
                     return True
         except:
             return False
+            
+    def checkIfGreater(ID, arg1, arg2, arg1name, arg2name, equal=False):
+        if not equal and arg1 > arg2:
+            return True
+        elif equal and arg1 >= arg2:
+            return True
+        else:
+            msg = f"{ID}: Given value {arg1name}={arg1} must be greater than {arg2name}={arg2}!"
+            Warnings.add(msg)
+            Log.updateLog(msg)
+            return False
