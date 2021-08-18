@@ -103,3 +103,16 @@ class ArgCheck:
             Warnings.add(msg)
             Log.updateLog(msg)
             return False
+            
+    def checkTuple(ID, arg, size, name):
+        if not isinstance(arg, tuple):
+            msg = f"{ID}: {name} should be {size}-element tuple, not {type(arg)}!"
+            Warnings.add(msg)
+            Log.updateLog(msg)
+            return False
+        elif len(arg) != size:
+            msg = f"{ID}: {name} should be {size}-element tuple, not {len(arg)}-element tuple!"
+            Warnings.add(msg)
+            Log.updateLog(msg)
+        else:
+            return True

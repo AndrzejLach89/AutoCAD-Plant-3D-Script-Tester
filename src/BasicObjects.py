@@ -17,6 +17,8 @@ class PLANTOBJECT:
     def setPoint(self, position, direction, angle=0):
         ArgCheck.check(self.ID, (position, direction, angle), ("num", "num", "num"))
         #print("  >{}: Adding point at {}, direction: {}".format(self.ID, position, direction))
+        ArgCheck.checkTuple(self.ID, position, 3, "Point coordinates")
+        ArgCheck.checkTuple(self.ID, direction, 3, "Direction vector")
         print("{}:\n\tAdding point at {}, direction: {}, angle: {}".format(self.ID, position, direction, angle))
         return self
         
@@ -32,15 +34,18 @@ class PLANTOBJECT:
         print("{}:\n\tObtaining position of connection point...".format(self.ID))
         return self
         
-    def setLinearDimension(self, name, vector1, vector2):
-        ArgCheck.check(self.ID, (name, vector1, vector2), (str, "num", "num"))
-        print("{}:\n\tAdding linear dimension at {}, {}".format(self.ID, vector1, vector2))
+    def setLinearDimension(self, name, point1, point2):
+        ArgCheck.check(self.ID, (name, point1, point2), (str, "num", "num"))
+        ArgCheck.checkTuple(self.ID, point1, 3, "Point 1 coordinates")
+        ArgCheck.checkTuple(self.ID, point2, 3, "Point 2 coordinates")
+        print("{}:\n\tAdding linear dimension at {}, {}".format(self.ID, point1, point2))
         return self
         
         
 class PRIMITIVE:
     def translate(self, x):
         ArgCheck.check(self.ID, x, "num")
+        ArgCheck.checkTuple(self.ID, x, 3, "Translation vector")
         print("{}:\n\ttranslation: {}".format(self.ID, x))
         return self
         
@@ -132,7 +137,7 @@ class CYLINDER(PRIMITIVE):
         print("Creating {}:".format(self.ID))
         print("\tRadius   (R):  {}".format(self.R))
         print("\tHeight   (H):  {}".format(self.H))
-        print("\tInner r  (O): {}".format(self.O))
+        print("\tInner r  (O):  {}".format(self.O))
    
    
 class TORUS(PRIMITIVE):
