@@ -253,7 +253,14 @@ class ScriptReader:
                 return groupName
             else:
                 return False
-                
+        def checkEmptyLine(line):
+            sym = ['', ' ', '\t', '\n']
+            empty = True
+            for i in line:
+                if i not in sym:
+                    empty = False
+                    break
+            return empty
         categoryError = False
         errors = False
         errorsLog = []
@@ -267,7 +274,9 @@ class ScriptReader:
                 inActivation = True
             elif "@group" in i:
                 continue
-            elif inActivation and "@param" not in i:
+            elif inActivation and "@param" not in i and checkEmptyLine(i):
+                break
+            elif inActivation and "def(" in i:
                 break
             if inActivation and "@param" in i:
                 activationLines.append(i)
