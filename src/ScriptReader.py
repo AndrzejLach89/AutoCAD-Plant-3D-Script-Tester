@@ -235,7 +235,7 @@ class ScriptReader:
         
     def checkActivation(self):
         def checkCategory(line):
-            avaliableCategories = ['Elbow', 'Coupling', 'Cross', 'Crossover', 'Lateral', 'Nipple', 'Reducer', 'Swage', 'Sleeve', 'Tee', 'Wye', 'BleedRing', 'BlindDisk', 'Cap', 'OrificePlate', 'Plug', 'SpacerDisk', 'SpectacleBlind', 'Strainer', 'Olet', 'ElbowSideOutlet', 'TeeSideOutlet', 'Flange', 'BlindFlange', 'Pipe', 'Valve', 'ValveBody', 'ValveActuator', 'Instrument']
+            avaliableCategories = ['Support', 'Elbow', 'Coupling', 'Cross', 'Crossover', 'Lateral', 'Nipple', 'Reducer', 'Swage', 'Sleeve', 'Tee', 'Wye', 'BleedRing', 'BlindDisk', 'Cap', 'OrificePlate', 'Plug', 'SpacerDisk', 'SpectacleBlind', 'Strainer', 'Olet', 'ElbowSideOutlet', 'TeeSideOutlet', 'Flange', 'BlindFlange', 'Pipe', 'Valve', 'ValveBody', 'ValveActuator', 'Instrument']
             category = ''
             #@activate(Group="Tee", TooltipShort="Cable tray tee - vertical", TooltipLong="Cable tray tee - vertical",  LengthUnit="mm", Ports=3)
             line = line.split('(')[1]
