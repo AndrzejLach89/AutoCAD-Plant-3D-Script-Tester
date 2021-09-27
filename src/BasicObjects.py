@@ -255,7 +255,8 @@ class CONE(PRIMITIVE):
         self.ID = "{} {}".format(CONE.name, CONE.ID)
         CONE.ID += 1
         ArgCheck.check(self.ID, (R1, R2, H, E), "num")
-        ArgCheck.checkValues(self.ID, {"R1":R1, "R2":R2, "H":H, "E":E})
+        ArgCheck.checkValues(self.ID, {"R1":R1, "R2":R2, "H":H})
+        ArgCheck.checkValues(self.ID, {"E":E}, True)
         self.s = s
         self.R1 = R1
         self.R2 = R2
